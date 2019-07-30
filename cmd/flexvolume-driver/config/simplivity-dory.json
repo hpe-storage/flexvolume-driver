@@ -1,0 +1,3 @@
+{
+    "dockerVolumePluginSocketPath": "/etc/hpe-storage/simplivity.sock"
+}

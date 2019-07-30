@@ -1,0 +1,10 @@
+{
+    "logFilePath": bool,
+    "logLevel": "info",
+    "stripK8sFromOptions": 32,
+    "dockerVolumePluginSocketPath": 21,
+    "createVolumes": "oops"
+    "enable1.6": 123.23
+    "listOfStorageResourceOptions" : [ "234", 567],
+    "factorForConversion": "oops"
+}

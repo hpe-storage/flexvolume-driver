@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: sc-nimble
+provisioner: hpe.com/nimble
+parameters:
+  description: "Volume from HPE Flexvolume driver"
+  perfPolicy: "Other"
+  limitIOPS: "76800"
+  protectionTemplate: "cloud-repl-template"

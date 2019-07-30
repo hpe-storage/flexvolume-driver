@@ -1,0 +1,18 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nimble-config
+  namespace: kube-system
+data:
+  volume-driver.json: |-
+    {
+      "global":   {},
+      "defaults": {
+                 "sizeInGiB":"10",
+                 "limitIOPS":"-1",
+                 "limitMBPS":"-1",
+                 "perfPolicy": "Other",
+                 "mountConflictDelay": 120
+                },
+      "overrides":{}
+    }

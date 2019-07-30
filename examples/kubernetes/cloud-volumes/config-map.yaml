@@ -1,0 +1,34 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nimble-config
+  namespace: kube-system
+data:
+  volume-driver.json: |-
+    {
+      "global": {
+                "nameSuffix": ".docker",
+                "snapPrefix": "BaseFor",
+                "initiators": ["10.128.0.14", "10.1.0.8", "10.1.0.7"],
+                "automatedConnection": true,
+                "existingCloudSubnet": "10.1.0.0/24",
+                "region": "us-east-1",
+                "privateCloud": "vpc-data",
+                "cloudComputeProvider": "Google Cloud Platform"
+      },
+      "defaults": {
+                "sizeInGiB": 10,
+                "limitIOPS": 1000,
+                "fsOwner": "0:0",
+                "fsMode": "600",
+                "description": "persistent volume for container",
+                "perfPolicy": "Other",
+                "protectionTemplate": "twicedaily:4",
+                "encryption": true,
+                "volumeType": "PF",
+                "destroyOnRm": true,
+                "mountConflictDelay": 120
+      },
+      "overrides": {
+      }
+    }
