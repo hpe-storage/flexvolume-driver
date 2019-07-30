@@ -1,5 +1,5 @@
 NAME = flexvolume-driver
-REPO_NAME ?= hpe/flexvolume-driver
+REPO_NAME ?= hpestorage/flexvolume-driver
 
 # Use the latest git tag
 TAG = $(shell git tag|tail -n1)
