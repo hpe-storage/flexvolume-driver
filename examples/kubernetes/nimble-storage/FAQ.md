@@ -24,9 +24,11 @@
 ### b. To ensure FlexVolume to Docker Volume Driver connectivity, manually test a mount using:
 
 ```markdown
-/usr/libexec/kubernetes/kubelet-plugins/volume/exec/hpe.com~nimble/nimble mount /tmp/1 '{"name":"testvol", "sizeInGiB":"20", "destroyOnRm": "true"}'•```
+/usr/libexec/kubernetes/kubelet-plugins/volume/exec/hpe.com~nimble/nimble mount /tmp/1 '{"name":"testvol", "sizeInGiB":"20", "destroyOnRm": "true"}'•
+```
 
 This should result in the following error:
+
 ```json
 {"status":"Failure","message":"unable to split /tmp/1"}.
 ```
@@ -35,4 +37,5 @@ This should result in the following error:
 
 ```markdown
 Info : 2019/03/14 18:21:52 dory.go:82: [14414] request: init []
-Info : 2019/03/14 18:21:52 dory.go:100: [14414] reply  : init []: {"status":"Success","capabilities":{"attach":false}}```
+Info : 2019/03/14 18:21:52 dory.go:100: [14414] reply  : init []: {"status":"Success","capabilities":{"attach":false}}
+```
