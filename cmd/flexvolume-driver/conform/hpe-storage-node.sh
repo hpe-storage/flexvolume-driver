@@ -35,7 +35,8 @@ if [ "$CONFORM_TO" = "ubuntu" ]; then
         if [ ! -f /sbin/iscsid ]; then
             apt-get -qq update
             apt-get -qq install -y open-iscsi
-            exit_on_error $?
+            # exit with error to trigger restart of pod to mount newly installed iscisadm
+            exit 1
         fi
 
         # load iscsi_tcp modules, its a no-op if its already loaded
@@ -53,7 +54,8 @@ elif [ "$CONFORM_TO" = "redhat" ]; then
         # check if iscsi packages are missing and install
         if [ ! -f /sbin/iscsid ]; then
             yum -y install iscsi-initiator-utils
-            exit_on_error $?
+            # exit with error to trigger restart of pod to mount newly installed iscisadm
+            exit 1
         fi
 
         # load iscsi_tcp modules, its a no-op if its already loaded
