@@ -2,21 +2,18 @@
 
 ## 1. Troubleshooting Flexvolume Driver
 
-### a. An optional nimble.json config file can be used to override some of the default options. By default the following options are implemented an can be overridden by the json file at /usr/libexec/kubernetes/kubelet-plugins/volume/exec/hpe.com~nimble/nimble.json
+### a. Config File
 
-```json
-{
-    "dockerVolumePluginSocketPath": "/etc/hpe-storage/nimble.sock"
-}
-```
+`nimble.json` config file can be used to override some of the default options.
+By default the following options are implemented and can be overridden by the json file at
 
-**Note:** Some of the options which can be overriden in the `nimble.json` file are as follows
+`/usr/libexec/kubernetes/kubelet-plugins/volume/exec/hpe.com~nimble/nimble.json`
 
 ```json
 {
     "logFilePath": "/var/log/dory.log",
     "logDebug": false,
-    "dockerVolumePluginSocketPath": "/etc/hpe-storage/nimble.sock",,
+    "dockerVolumePluginSocketPath": "/etc/hpe-storage/nimble.sock",
     "defaultOptions": [{"option1": "value1"}, {"option2": "value2"}]
 }
 ```

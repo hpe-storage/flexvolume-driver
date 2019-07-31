@@ -330,3 +330,7 @@ Following options are supported by flexvolume-driver which can be provided under
     "factorForConversion": 1073741824,
     "defaultOptions": [{"manager": "k8s"}]
 }
+
+## FAQ
+
+Some of the troubleshooting and FAQs can be found at [FAQ](examples/kubernetes/nimble-storage/FAQ.md)
