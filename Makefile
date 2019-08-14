@@ -84,6 +84,9 @@ compile:
 	@echo "Compiling the source"
 	@env CGO_ENABLED=0 GOOS=${GOOS} GOARCH=amd64 go build -o build/${NAME} ./cmd/flexvolume-driver/
 
+	@echo "Compiling the windows source"
+	@env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o build/${NAME}.exe ./cmd/flexvolume-driver/
+
 .PHONY: test
 test:
 	@echo "Testing all packages"
