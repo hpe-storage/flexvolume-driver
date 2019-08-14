@@ -1,3 +1,0 @@
-{
-    "dockerVolumePluginSocketPath": "/etc/hpe-storage/nimble.sock"
-}

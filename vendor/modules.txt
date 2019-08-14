@@ -1,6 +1,6 @@
 # github.com/gorilla/mux v1.7.2
 github.com/gorilla/mux
-# github.com/hpe-storage/common-host-libs v0.0.0-20190729230508-ed4df55bd64a
+# github.com/hpe-storage/common-host-libs v0.0.0-20190813183645-06ce42d57f97
 github.com/hpe-storage/common-host-libs/docker/dockervol
 github.com/hpe-storage/common-host-libs/jconfig
 github.com/hpe-storage/common-host-libs/logger
@@ -21,7 +21,7 @@ github.com/mitchellh/mapstructure
 github.com/sirupsen/logrus
 # golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
 golang.org/x/crypto/ssh/terminal
-# golang.org/x/sys v0.0.0-20190712062909-fae7ac547cb7
+# golang.org/x/sys v0.0.0-20190726091711-fc99dfbffb4e
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 # gopkg.in/natefinch/lumberjack.v2 v2.0.0
