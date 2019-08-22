@@ -1,4 +1,4 @@
-# HPE Nimble Storage Flexvolume Driver Worklows
+# HPE Nimble Storage FlexVolume Driver Worklows
 
 ## Storage Class Properties
 

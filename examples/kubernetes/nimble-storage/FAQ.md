@@ -1,6 +1,6 @@
 # FAQs
 
-## 1. Troubleshooting Flexvolume Driver
+## 1. Troubleshooting FlexVolume Driver
 
 ### a. Config File
 
