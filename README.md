@@ -140,7 +140,7 @@ configmap/nimble-config created
 
 ### Step 3. Deploy the HPE FlexVolume driver and HPE Dynamic Provisioner (doryd)
 
-Deploy HPE Flexvolume driver as Daemonset and HPE Dynamic Provisioner(doryd) as Deployment using below command:
+Deploy HPE FlexVolume driver as Daemonset and HPE Dynamic Provisioner(doryd) as Deployment using below command:
 
 ```
 $ kubectl create -f hpe-flexvolume-driver.yaml
@@ -200,7 +200,7 @@ metadata:
   name: sc-nimble
 provisioner: hpe.com/nimble
 parameters:
-  description: "Volume from HPE Flexvolume driver"
+  description: "Volume from HPE FlexVolume driver"
   perfPolicy: "Other"
   limitIOPS: "76800"
   protectionTemplate: "cloud-repl-template"
@@ -315,7 +315,7 @@ The above output means that the HPE Cloud Volumes FlexVolume driver successfully
 
 Sample storage classes can be found for [Nimble Storage](examples/kubernetes/nimble-storage/README.md), [Cloud Volumes](examples/kubernetes/cloud-volumes/README.md), Simplivity, and 3Par.
 
-## Flexvolume-driver config options
+## FlexVolume-driver config options
 
 Following options are supported by flexvolume-driver which can be provided under flexvolume exec path with convention {driver-name}.json
 

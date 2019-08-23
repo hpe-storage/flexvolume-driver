@@ -48,7 +48,7 @@ var (
 
 	dockerVolumePluginSocketPath = "/etc/hpe-storage/nimble.sock"
 	stripK8sFromOptions          = true
-	logFilePath                  = "/var/log/hpe-flexvolume-driver.log"
+	logFilePath                  = "/var/log/hpe-flexVolume-driver.log"
 	logLevel                     = "info"
 	createVolumes                = false
 	enable16                     = false
