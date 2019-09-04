@@ -2,6 +2,14 @@
 
 FlexVolume Driver for Kubernetes leverages HPE Nimble Storage or HPE Cloud Volumes to provide scalable and persistent storage for stateful applications.
 
+## Requirements
+
+* OpenShift Container Platform 3.9, 3.10 and 3.11.
+* Kubernetes 1.10 and above.
+* Redhat / CentOS 7.5+
+* Ubuntu LTS 16.04 / 18.04
+* NimbleOS `5.1.3.x` or greater on a HPE Nimble Storage array
+
 ## Deploying to Kubernetes
 
 ### Step 1: Create a secret
