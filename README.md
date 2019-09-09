@@ -128,7 +128,7 @@ data:
     },
     "overrides": {
     }
-}
+    }
 ```
 
 #### Then create the ConfigMap using kubectl:
