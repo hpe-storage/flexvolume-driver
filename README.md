@@ -1,6 +1,21 @@
-# flexvolume-driver
+# HPE Volume Driver for Kubernetes FlexVolume Plugin
 
-FlexVolume Driver for Kubernetes leverages HPE Nimble Storage or HPE Cloud Volumes to provide scalable and persistent storage for stateful applications.
+HPE Volume Driver for Kubernetes FlexVolume Plugin leverages HPE Nimble Storage or HPE Cloud Volumes to provide scalable and persistent storage for stateful applications.
+
+## Requirements
+
+* OpenShift Container Platform 3.9, 3.10 and 3.11.
+* Kubernetes 1.10 and above.
+* Redhat / CentOS 7.5+
+* Ubuntu LTS 16.04 / 18.04
+
+## Support Matrix for HPE Volume Driver for Kubernetes FlexVolume Plugin on HPE Nimble Storage
+
+| Release                 | HPE Nimble Storage Version    |
+|-------------------------|----------|
+| v3.0.0              | 5.1.3.x |
+
+**Note:** Synchronous Replication (Peer persistence) is not supported by the HPE Volume Driver for Kubernetes FlexVolume Plugin
 
 ## Deploying to Kubernetes
 
@@ -138,23 +153,26 @@ $ kubectl create -f nimble-config.yaml
 configmap/nimble-config created
 ```
 
-### Step 3. Deploy the HPE FlexVolume driver and HPE Dynamic Provisioner (doryd)
+### Step 3. Deploy the HPE Volume Driver for Kubernetes FlexVolume Plugin and HPE Dynamic Provisioner for Kubernetes
 
-Deploy HPE FlexVolume driver as Daemonset and HPE Dynamic Provisioner(doryd) as Deployment using below command:
+Deploy HPE FlexVolume driver as Daemonset and HPE Dynamic Provisioner as Deployment using below command:
 
 ```
-$ kubectl create -f hpe-flexvolume-driver.yaml
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-flexvolume-driver-v3.0.0.yaml
 ```
 
 or for HPE Cloud Volumes
 
 ```
-$ kubectl create -f cv-flexvolume-driver.yaml
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpecv-flexvolume-driver.yaml
 ```
 
-Check to see all hpe-flexvolume and kube-storage-controller-doryd pods are running using kubectl:
+**Note:** The deployment yaml files for HPE Volume Driver for Kubernetes FlexVolume can be found [here](https://github.com/hpe-storage/co-deployments/tree/master/yaml/flexvolume-driver)
 
-```
+Check to see all hpe-flexvolume and hpe-dynamic-provisioner pods are running using kubectl:
+
+```markdown
+
 $ kubectl get pods -n kube-system
 NAME                                            READY   STATUS    RESTARTS   AGE
 alertmanager-0                                  2/2     Running   0          3d
@@ -177,7 +195,7 @@ kube-proxy-gfvw6                                1/1     Running   1          14d
 kube-proxy-j6kwj                                1/1     Running   1          14d
 kube-proxy-kttss                                1/1     Running   1          14d
 kube-state-metrics-79c995cd8c-kq95s             2/2     Running   0          3d
-kube-storage-controller-doryd-6db794764-l4rj8   1/1     Running   2          12d
+pod/hpe-dynamic-provisioner-59f9d495d4-hxh29    1/1     Running   2          12d
 load-balancer-f5-589b5b6d8d-7b62x               1/1     Running   0          3d
 logging-operator-cbbc69c67-482km                1/1     Running   0          3d
 node-exporter-9md2k                             2/2     Running   2          14d
@@ -189,135 +207,19 @@ pushprox-client-78cc6d85cb-68jd4                2/2     Running   0          3d
 stackdriver-operator-7b4bb8f667-ll56b           1/1     Running   0          3d
 ```
 
-### Step 4. Test and verify volume provisioning
+## Building the HPE Volume Driver for Kubernetes FlexVolume Plugin
 
-Create a StorageClass with volume parameters as required.  Note the example below will look for a protection template named "cloud-repl-template" that is configured to replicate as an HPE Cloud Volume.
+Instructions on how to build the HPE Volume Driver for Kubernetes FlexVolume Plugin can be found in [BUILDING.md](BUILDING.md)
 
-```
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: sc-nimble
-provisioner: hpe.com/nimble
-parameters:
-  description: "Volume from HPE FlexVolume driver"
-  perfPolicy: "Other"
-  limitIOPS: "76800"
-  protectionTemplate: "cloud-repl-template"
-```
+## Using the HPE Volume Driver for Kubernetes FlexVolume Plugin
 
-Create a PersistentVolumeClaim. This makes sure a volume is created and provisioned on your behalf:
-
-```
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pvc-nimble
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: sc-nimble
-```
-
-Check that a new `PersistentVolume` is created based on your claim:
-
-```
-$ kubectl get pv
-NAME                                            CAPACITY     ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM               STORAGECLASS   REASON   AGE
-sc-nimble-13336da3-7ca3-11e9-826c-00505693581f  10Gi         RWO            Delete           Bound    default/pvc-nimble  sc-nimble               3s
-```
-
-The above output means that the HPE Nimble Storage FlexVolume driver successfully provisioned a new volume and automatically setup to replicate to HPE Cloud Volumes.  The volume is not attached to any node yet. It will only be attached to a node if a workload is scheduled to a specific node. Now let us create a Pod that refers to the above volume. When the Pod is created, the volume will be attached, formatted and mounted to the specified container:
-
-```
-kind: Pod
-apiVersion: v1
-metadata:
-  name: pod-nimble
-spec:
-  containers:
-    - name: pod-nimble-con-1
-      image: nginx
-      command: ["bin/sh"]
-      args: ["-c", "while true; do date >> /data/mydata.txt; sleep 1; done"]
-      volumeMounts:
-        - name: export1
-          mountPath: /data
-    - name: pod-nimble-cont-2
-      image: debian
-      command: ["bin/sh"]
-      args: ["-c", "while true; do date >> /data/mydata.txt; sleep 1; done"]
-      volumeMounts:
-        - name: export1
-          mountPath: /data
-  volumes:
-    - name: export1
-      persistentVolumeClaim:
-        claimName: pvc-nimble
-```
-
-Check if the pod is running successfully:
-
-```
-$ kubectl get pod pod-nimble
-NAME         READY   STATUS    RESTARTS   AGE
-pod-nimble   2/2     Running   0          2m29s
-```
-
-### Step 5. Test and verify volume provisioning for HPE cloud volumes using import
-
-Create a StorageClass with volume parameters as required and specify the replica volume name to import as clone along with its replication store name as below example. Note the provisioner name as `hpe.com/cv`.
-
-```
----
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
- name: sc-cv
-provisioner: hpe.com/cv
-parameters:
-  description: "Nimble Storage Class"
-  mountConflictDelay: "150"
-  importVolAsClone: "base-replica-volume"
-  replStore: "replication-store-name"
-```
-
-Create a PersistentVolumeClaim. This makes sure a volume is created and provisioned on your behalf:
-
-```
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pvc-cv
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: sc-cv
-```
-
-Check that a new `PersistentVolume` is created based on your claim:
-
-```
-$ kubectl get pv
-NAME                                            CAPACITY     ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM               STORAGECLASS   REASON   AGE
-sc-cv-13336da3-7ca3-11e9-826c-00505693581f   10Gi         RWO            Delete           Bound    default/pvc-cv   sc-cv               3s
-```
-
-The above output means that the HPE Cloud Volumes FlexVolume driver successfully provisioned a new volume cloned from replicated on-prem volume. The volume is not attached to any node yet. It will only be attached to a node if a workload is scheduled to a specific node. Now follow the steps above to create a pod referencing the HPE Cloud Volume created above.
-
-## Sample storage classes
-
-Sample storage classes can be found for [Nimble Storage](examples/kubernetes/nimble-storage/README.md), [Cloud Volumes](examples/kubernetes/cloud-volumes/README.md), Simplivity, and 3Par.
+Getting started with the HPE Volume Driver for Kubernetes FlexVolume Plugin, setting up `StorageClass`. See [USING.md](USING.md) for examples.
 
 ## FlexVolume-driver config options
 
 Following options are supported by flexvolume-driver which can be provided under flexvolume exec path with convention {driver-name}.json
+
+```json
 
 {
     "logFilePath": "/var/log/hpe-flexvolume-driver.log",
@@ -330,7 +232,44 @@ Following options are supported by flexvolume-driver which can be provided under
     "factorForConversion": 1073741824,
     "defaultOptions": [{"manager": "k8s"}]
 }
+```
+
+## Logging and Diagnostic
+
+Log files associated with the HPE Volume Driver for Kubernetes FlexVolume Plugin logs data to the standard output stream. If the logs need to be retained for long term, use a standard logging solution. Some of the logs on the host are persisted which follow standard logrotate policies.
+
+### FlexVolume Plugin Logs
+
+* Flexvolume plugin logs:
+  `kubectl logs -f daemonset.apps/hpe-flexvolume-driver -n kube-system`
+  The logs are persisted at `/var/log/hpe-docker-plugin.log` and `/var/log/dory.log`
+
+* HPE Dynamic Provisioner logs:
+  `kubectl logs -f  deployment.apps/hpe-dynamic-provisioner`
+  The logs are persisted at `/var/log/hpe-dynamic-provisioner.log`
+
+### Log Collector
+
+Log collector script `hpe-logcollector.sh` can be used to collect diagnostic logs from the hosts.
+
+```markdown
+
+hpe-logcollector.sh -h
+Diagnostic LogCollector Script to collect HPE Storage logs
+```
+
+## Support
+
+Please file any issues, questions or feature requests [here](https://github.com/hpe-storage/flexvolume-driver/issues). You may also join our Slack community to chat with HPE folks close to this project. We hang out in `#NimbleStorage` and `#Kubernetes` at [slack.hpedev.io](https://slack.hpedev.io/).
+
+## Contributing
+
+We value all feedback and contributions. If you find any issues or want to contribute, please feel free to open an issue or file a PR. More details in [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## License
+
+This is open source software licensed using the Apache License 2.0. Please see [LICENSE](LICENSE) for details.
 
 ## FAQ
 
-Some of the troubleshooting and FAQs can be found at [FAQ](examples/kubernetes/nimble-storage/FAQ.md)
+Some of the troubleshooting and FAQs can be found at [FAQ](examples/kubernetes/hpe-nimble-storage/FAQ.md)

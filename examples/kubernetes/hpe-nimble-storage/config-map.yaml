@@ -12,7 +12,6 @@ data:
                  "limitIOPS":"-1",
                  "limitMBPS":"-1",
                  "perfPolicy": "Other",
-                 "mountConflictDelay": 120
                 },
       "overrides":{}
     }

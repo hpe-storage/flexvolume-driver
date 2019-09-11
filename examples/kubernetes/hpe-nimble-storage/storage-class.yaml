@@ -7,4 +7,3 @@ parameters:
   description: "Volume from HPE Flexvolume driver"
   perfPolicy: "Other"
   limitIOPS: "76800"
-  protectionTemplate: "cloud-repl-template"
