@@ -20,7 +20,7 @@ By default the following options are implemented and can be overridden by the js
 
 where `option1` and `option2` are valid flexvolume create options
 
-### b. To ensure FlexVolume to Docker Volume Driver connectivity, manually test a mount using
+### b. To ensure FlexVolume Driver connectivity, manually test a mount using
 
 ```markdown
 /usr/libexec/kubernetes/kubelet-plugins/volume/exec/hpe.com~nimble/nimble mount /tmp/1

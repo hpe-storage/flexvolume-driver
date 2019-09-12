@@ -1,4 +1,4 @@
-# HPE Nimble Storage FlexVolume Driver Worklows
+# HPE Volume Driver for Kubernetes FlexVolume Plugin
 
 ## Storage Class Properties
 
