@@ -1,7 +1,7 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: nimble-config
+  name: hpe-config
   namespace: kube-system
 data:
   volume-driver.json: |-
@@ -21,7 +21,7 @@ data:
                 "limitIOPS": 1000,
                 "fsOwner": "0:0",
                 "fsMode": "600",
-                "description": "persistent volume for container",
+                "description": "Volume provisioned by the HPE Volume Driver for Kubernetes FlexVolume Plugin",
                 "perfPolicy": "Other",
                 "protectionTemplate": "twicedaily:4",
                 "encryption": true,

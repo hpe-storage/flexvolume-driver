@@ -1,224 +1,59 @@
-# HPE Volume Driver for Kubernetes FlexVolume Plugin
+# HPE Nimble Storage StorageClass parameters
+A `StorageClass` is used to provision or clone an HPE Nimble Storage-backed persistent volume. It can also be used to import an existing HPE Nimble Storage volume or clone of a snapshot into the Kubernetes cluster. The parameters are grouped below by those same workflows.
 
-## Storage Class Properties
+A sample [StorageClass](sc-nimble.yaml) is provided.
 
-A storage class is used to create or clone an HPE Nimble Storage-backed persistent volume.  It can also be used to import an existing HPE Nimble Storage volume or clone of a snapshot into the Kubernetes cluster.  The parameters are grouped below by workflow.
+**Note:** These are optional parameters.
 
-### 1. Valid Parameters for Create
+## Common parameters for Provisioning and Cloning
+These parameters are mutable betweeen a parent volume and creating a clone from a snapshot.
 
-```markdown
-- limitIOPS:"X"
-    - Where X is the IOPS limit of the volume. The IOPS limit should be in the range [256, 4294967294], or -1 for unlimited.
+| Parameter | String | Description |
+| --------- | ------ | ----------- |
+| nameSuffix| Text   | Suffix to append to Nimble volumes. Defaults to .docker |
+| destroyOnRm | Boolean | Indicates the backing Nimble volume (including snapshots) should be destroyed when the PVC is deleted. |
+| limitIOPS | Integer | The IOPS limit of the volume. The IOPS limit should be in the range 256 to 4294967294, or -1 for unlimited (default). |
+| limitMBPS | Integer | The MB/s throughput limit for the volume. |
+| description | Text | Text to be added to the volume's description on the Nimble array. |
+| perfPolicy | Text | The name of the performance policy to assign to the volume. Default example performance policies include "Backup Repository", "Exchange 2003 data store", "Exchange 2007 data store", "Exchange 2010 data store", "Exchange log", "Oracle OLTP", "Other Workloads", "SharePoint", "SQL Server", "SQL Server 2012", "SQL Server Logs". |
+| protectionTemplate | Text | The name of the protection template to assign to the volume. Default examples of protection templates include "Retain-30Daily", "Retain-48Hourly-30aily-52Weekly", and "Retain-90Daily". |
+| folder | Text | The name of the Nimble folder in which to place the volume. |
+| thick | Boolean | Indicates that the volume should be thick provisioned. |
+| dedupeEnabled | Boolean | Indicates that the volume should enable deduplication. |
+| syncOnUnmount | Boolean | Indicates that a snapshot of the volume should be synced to the replication partner each time it is detached from a node. |
 
-- limitMBPS:"X"
-    - Where X is the MB/s throughput limit for this volume. If both limitIOPS and limitMBPS are specified, limitIOPS must be specified first.
-    - destroyOnRm:"true"
-        - Indicates that the Nimble volume (including snapshots) backing this volume should be destroyed when this volume is deleted.
+**Note**: Performance Policies, Folders and Protection Templates are Nimble specific constructs that can be created on the Nimble array itself to address particular requirements or workloads. Please consult with the storage admin or read the admin guide found on [HPE InfoSight](https://infosight.hpe.com).
 
-- sizeInGiB:"X"
-    - Where X is the size of volume specified in GiB.
+## Provisioning parameters
+These parameters are immutable for clones once a volume has been created.
 
-- size:"X"
-    - Where X is the size of volume specified in GiB (short form of sizeInGiB).
+| Parameter | String | Description |
+| --------- | ------ | ----------- |
+| fsOwner | userId:groupId | The user id and group id that should own the root directory of the filesystem. |
+| fsMode | Octal digits | 1 to 4 octal digits that represent the file mode to be applied to the root directory of the filesystem. |
+| encryption | Boolean | Indicates that the volume should be encrypted. |
+| pool | Text | The name of the pool in which to place the volume. |
 
-- fsOwner:"X"
-    - Where X is the user id and group id that should own the root directory of the filesystem, in the form of [userId:groupId].
+## Cloning parameters
+Cloning supports two modes of cloning. Either use `cloneOf` and reference a PVC in the current namespace or use `importVolAsClone` and reference a Nimble volume name to clone and import to Kubernetes.
 
-- fsMode:"X"
-    - Where X is 1 to 4 octal digits that represent the file mode to be applied to the root directory of the filesystem.
+| Parameter | String | Description |
+| --------- | ------ | ----------- |
+| cloneOf | Text | The name of the PV to be cloned. `cloneOf` and `importVolAsClone` are mutually exclusive. |
+| importVolAsClone | Text | The name of the Nimble volume to clone and import. `importVolAsClone` and `cloneOf` are mutually exclusive. |
+| snapshot | Text | The name of the snapshot to base the clone on. This is optional. If not specified, a new snapshot is created. |
+| createSnapshot | Boolean | Indicates that a new snapshot of the volume should be taken matching the name provided in the `snapshot` parameter. If the `snapshot` parameter is not specified, a default name will be created. |
+| snapshotPrefix | Text | A prefix to add to the beginning of the snapshot name. |
+| destroyOnDetach | Boolean | Indicates that the Nimble volume (including snapshots) backing this volume should be destroyed when this volume is unmounted or detached. |
 
-- description:"X"
-    - Where X is the text to be added to volume description (optional).
+## Import parameters
+Importing volumes to Kubernetes requires the source Nimble volume to be offline. All previous Access Control Records and Initiator Groups will be stripped from the volume when put under control of the HPE Volume Driver for Kubernetes FlexVolume Plugin.
 
-- perfPolicy:"X"
-    - Where X is the name of the performance policy (optional).
-    - Examples of Performance Policies include: Exchange 2003 data store, Exchange 2007 data store, Exchange log, SQL Server, SharePoint, Exchange 2010 data store, SQL Server Logs, SQL Server 2012, Oracle OLTP, Windows File Server, Other Workloads, Backup Repository.
-
-- pool:"X"
-    - Where X is the name of pool in which to place the volume (optional).
-
-- folder:"X"
-    - Where X is the name of folder in which to place the volume (optional).
-
-- encryption:"true"
-    - Indicates that the volume should be encrypted (optional, dedupe and encryption are mutually exclusive).
-
-- thick:"true"
-    - Indicates that the volume should be thick provisioned (optional, dedupe and thick are mutually exclusive).
-
-- dedupe:"true"
-    - Indicates that the volume should be deduplicated.
-
-- protectionTemplate:"X"
-    - Where X is the name of the protection template (optional).
-    - Examples of Protection Templates include: Retain-30Daily, Retain-90Daily, Retain-48Hourly-30Daily-52Weekly.
-```
-
-#### Example
-
-```yaml
-
----
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-    name: oltp-prod
-provisioner: hpe.com/nimble
-parameters:
-    thick: "false"
-    dedupe: "true"
-    perfPolicy: "SQL Server"
-    protectionTemplate: "Retain-48Hourly-30Daily-52Weekly"
-```
-
-### 2. Valid Parameters for Clone
-
-```markdown
-- cloneOf:"X"
-    - Where X is the name of the Docker Volume to be cloned.
-
-- snapshot:"X"
-    - Where X is the name of the snapshot to base the clone on. This is optional. If not specified, a new snapshot is created.
-
-- createSnapshot:"true"
-    - Indicates that a new snapshot of the volume should be taken and used for the clone (optional).
-
-- destroyOnRm:"true"
-    - Indicates that the Nimble volume (including snapshots) backing this volume should be destroyed when this volume is deleted.
-```
-
-#### Example
-
-```yaml
----
-  kind: StorageClass
-  apiVersion: storage.k8s.io/v1
-  metadata:
-    name: oltp-dev-clone-of-prod
-  provisioner: hpe.com/nimble
-  parameters:
-    limitIOPS: "1000"
-    cloneOf: "oltp-prod-1adee106-110b-11e8-ac84-00505696c45f"
-    destroyOnRm: "true"
-```
-
-### 3. Valid Parameters for Import Clone of Snapshot
-
-```markdown
-- importVolAsClone:"X"
-    - Where X is the name of the Nimble Volume and Nimble Snapshot to clone and import.
-
-- snapshot:"X"
-    - Where X is the name of the Nimble Snapshot to clone and import (optional, if missing, will use the most recent snapshot).
-
-- createSnapshot:"true"
-    - Indicates that a new snapshot of the volume should be taken and used for the clone (optional).
-
-- pool:"X"
-    - Where X is the name of the pool in which the volume to be imported resides (optional).
-
-- folder:"X"
-    - Where X is the name of the folder in which the volume to be imported resides (optional).
-
-- destroyOnRm:"true"
-    - Indicates that the Nimble volume (including snapshots) backing this volume should be destroyed when this volume is deleted.
-
-- destroyOnDetach
-    - Indicates that the Nimble volume (including snapshots) backing this volume should be destroyed when this volume is unmounted or detached.
-```
-
-#### Example
-
-```yaml
----
-  kind: StorageClass
-  apiVersion: storage.k8s.io/v1
-  metadata:
-    name: import-clone-legacy-prod
- provisioner: hpe.com/nimble
-  parameters:
-    pool: "flash"
-    importVolAsClone: "production-db-vol"
-    destroyOnRm: "true"
-```
-
-### 4. Valid Parameters for Import Volume
-
-```markdown
-- importVol:"X"
-    - Where X is the name of the Nimble volume to import.
-
-- pool:"X"
-    - Where X is the name of the pool in which the volume to be imported resides (optional).
-
-- folder:"X"
-    - Where X is the name of the folder in which the volume to be imported resides (optional).
-
-- forceImport:"true"
-    - Force the import of the volume. Note that overwrites application metadata (optional).
-
-- restore
-    - Restores the volume to the last snapshot taken on the volume (optional).
-
-- snapshot:"X"
-    - Where X is the name of the snapshot which the volume will be restored to. Only used with -o restore (optional).
-
-- takover
-    - Indicates the current group will takeover the ownership of the Nimble volume and volume collection (optional).
-
-- reverseRepl
-    - Reverses the replication direction so that writes to the Nimble volume are replicated back to the group where it was replicated from (optional).
-```
-
-#### Example
-
-```yaml
----
-  kind: StorageClass
-  apiVersion: storage.k8s.io/v1
-  metadata:
-    name: import-clone-legacy-prod
-  provisioner: hpe.com/nimble
-  parameters:
-    pool: "flash"
-    importVol: "production-db-vol"
-```
-
-### 5. Valid Parameter for allowOverrides
-
-#### Example
-
-```yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
- name: mysc900
-provisioner: hpe.com/nimble
-parameters:
- description: "Volume from doryd"
- size: "900"
- dedupe: "false"
- destroyOnRm: "true"
- perfPolicy: "Windows File Server"
- folder: "mysc900"
- allowOverrides: snapshot,description,limitIOPS,size,perfPolicy,thick,folder
- ```
-
-#### Persistent Volume Claim
-
-```yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
- name: mypvc901
- annotations:
-    hpe.com/description: "This is my custom description"
-    hpe.com/limitIOPS: "8000"
-    hpe.com/cloneOfPVC: myPVC
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: mysc900```
+| Parameter | String | Description |
+| --------- | ------ | ----------- |
+| importVol | Text | The name of the Nimble volume to import. |
+| snapshot | Text | The name of the Nimble snapshot to restore the imported volume to after takeover. If not specified, the volume will not be restored. |
+| restore  | Boolean | Restores the volume to the last snapshot taken on the volume. |
+| takeover | Boolean | Indicates the current group will takeover ownership of the Nimble volume and volume collection. This should be performed against a downstream replica. |
+| reverseRepl | Boolean | Reverses the replication direction so that writes to the Nimble volume are replicated back to the group where it was replicated from. |
+| forceImport | Boolean | Forces the import of a volume that is not owned by the group and is not part of a volume collection. If the volume is part of a volume collection, use takeover instead.
