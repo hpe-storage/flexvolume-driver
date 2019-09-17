@@ -29,7 +29,7 @@ Use the following steps for a manual installation.
 ### Step 1: Create a secret
 
 #### HPE Nimble Storage
-Replace the `password` string (`YWRtaW4=`) below with a base64 encoded version of your password and replace the `ip` with your array IP address and save it as `hpe-secret.yaml`.
+Replace the `password` string (`YWRtaW4=`) below with a base64 encoded version of your password and replace the `backend` with your array IP address and save it as `hpe-secret.yaml`.
 
 ```
 apiVersion: v1
@@ -38,7 +38,7 @@ metadata:
   name: hpe-secret
   namespace: kube-system
 stringData:
-  ip: 192.168.1.1
+  backend: 192.168.1.1
   username: admin
   protocol: "iscsi"
 data:
@@ -47,7 +47,7 @@ data:
 ```
 
 #### HPE Cloud Volumes
-Replace the `username` and `password` strings (`YWRtaW4=`) with a base64 encoded version of your HPE Cloud Volumes "access_key" and "access_secret". Also, replace the `ip` with HPE Cloud Volumes portal fully qualified domain name (FQDN) and save it as `hpe-secret.yaml`.
+Replace the `username` and `password` strings (`YWRtaW4=`) with a base64 encoded version of your HPE Cloud Volumes "access_key" and "access_secret". Also, replace the `backend` with HPE Cloud Volumes portal fully qualified domain name (FQDN) and save it as `hpe-secret.yaml`.
 
 ```
 apiVersion: v1
@@ -56,7 +56,7 @@ metadata:
   name: hpe-secret
   namespace: kube-system
 stringData:
-  ip: cloudvolumes.hpe.com
+  backend: cloudvolumes.hpe.com
   protocol: "iscsi"
 data:
   # echo -n "<my very confidential access key>" | base64
