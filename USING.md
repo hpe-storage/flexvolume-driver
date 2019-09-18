@@ -12,7 +12,7 @@ kubectl create -f-
 
 **Note:**  Some of the examples supported by the HPE Volume Driver for Kubernetes FlexVolume Plugin are available in the [examples/kubernetes/hpe-nimble-storage](examples/kubernetes/hpe-nimble-storage) directory or [examples/kubernetes/cloud-volumes](examples/kubernetes/cloud-volumes) and all the HPE Nimble Storage Array Flexvolume `StorageClass` parameters can be found in [examples/kubernetes/hpe-nimble-storage](examples/kubernetes/hpe-nimble-storage).
 
-To get started, create a `StorageClass` API object referencing the `nimble-secret` and defining additional (optional) `StorageClass` parameters:
+To get started, create a `StorageClass` API object referencing the `hpe-secret` and defining additional (optional) `StorageClass` parameters:
 
 ## Sample storage classes
 
@@ -99,7 +99,7 @@ pod-nimble   2/2     Running   0          2m29s
 This `StorageClass` examples help guide combinations of options when provisioning volumes.
 
 ## Data protection
-This `StorageClass` creates thinly provisioned volumes with deduplication turned on. It will also apply the Performance Policy "SQL Server" along with a Protection Template. The Protection Template needs to be defined on the array. 
+This `StorageClass` creates thinly provisioned volumes with deduplication turned on. It will also apply the Performance Policy "SQL Server" along with a Protection Template. The Protection Template needs to be defined on the array.
 
 ```
 kind: StorageClass
@@ -169,7 +169,7 @@ metadata:
   name: my-sc
 provisioner: hpe.com/nimble
 parameters:
-  description: "Volume provisioned by StorageClass my-sc" 
+  description: "Volume provisioned by StorageClass my-sc"
   dedupe: "false"
   destroyOnRm: "true"
   perfPolicy: "Windows File Server"

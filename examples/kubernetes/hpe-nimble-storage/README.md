@@ -57,3 +57,5 @@ Importing volumes to Kubernetes requires the source Nimble volume to be offline.
 | takeover | Boolean | Indicates the current group will takeover ownership of the Nimble volume and volume collection. This should be performed against a downstream replica. |
 | reverseRepl | Boolean | Reverses the replication direction so that writes to the Nimble volume are replicated back to the group where it was replicated from. |
 | forceImport | Boolean | Forces the import of a volume that is not owned by the group and is not part of a volume collection. If the volume is part of a volume collection, use takeover instead.
+
+**Note:** HPE Nimble Docker Volume workflows works with 1-1 mapping between volume and volume collection.

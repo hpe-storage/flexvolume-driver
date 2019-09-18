@@ -1,4 +1,5 @@
 # HPE Volume Driver for Kubernetes FlexVolume Plugin
+
 HPE Volume Driver for Kubernetes FlexVolume Plugin leverages HPE Nimble Storage or HPE Cloud Volumes to provide scalable and persistent storage for stateful applications.
 
 ## Host Platform Requirements
@@ -12,9 +13,9 @@ HPE Volume Driver for Kubernetes FlexVolume Plugin leverages HPE Nimble Storage 
 
 ### HPE Nimble Storage
 
-| Driver                  | HPE Nimble Storage Version    |
-|-------------------------|-------------------------------|
-| v3.0.0                  | 5.1.3.x                       |
+| Driver      | HPE Nimble Storage Version | Release Notes    |
+|-------------|----------------------------|------------------|
+| v3.0.0      | 5.1.3.x and above          | [v3.0.0](release-notes/v3.0.0.md)|
 
 **Note:** Synchronous replication (Peer Persistence) is not supported by the HPE Volume Driver for Kubernetes FlexVolume Plugin.
 
@@ -75,7 +76,7 @@ secret "hpe-secret" created
 You should now see the HPE secret in the `kube-system` namespace.
 
 ```
-$ kubectl get secret/nimble-secret -n kube-system
+$ kubectl get secret/hpe-secret -n kube-system
 NAME                  TYPE                                  DATA      AGE
 hpe-secret            Opaque                                5         3s
 ```
