@@ -27,8 +27,8 @@ require (
 	github.com/gostaticanalysis/analysisutil v0.0.3 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.9.5 // indirect
 	github.com/hashicorp/golang-lru v0.5.3 // indirect
-	github.com/hpe-storage/common-host-libs v0.0.0-20190813183645-06ce42d57f97
-	github.com/hpe-storage/common-host-utils v0.0.0-20190812223006-61689ac3ec84 // indirect
+	github.com/hpe-storage/common-host-libs v0.0.0-20190917235316-a15c8bb03ea3
+	github.com/hpe-storage/common-host-utils v0.0.0-20190918235214-a6826e35d21c // indirect
 	github.com/kisielk/errcheck v1.2.0 // indirect
 	github.com/klauspost/compress v1.7.5 // indirect
 	github.com/klauspost/cpuid v1.2.1 // indirect
