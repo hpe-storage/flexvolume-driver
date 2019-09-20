@@ -101,7 +101,7 @@ data:
                  "sizeInGiB":"10",
                  "limitIOPS":"-1",
                  "limitMBPS":"-1",
-                 "perfPolicy": "Other",
+                 "perfPolicy": "Other"
                 },
       "overrides":{}
     }
