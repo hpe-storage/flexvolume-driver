@@ -30,7 +30,7 @@ metadata:
 provisioner: hpe.com/nimble
 parameters:
   description: "Volume from HPE FlexVolume driver"
-  perfPolicy: "Other"
+  perfPolicy: "Other Workloads"
   limitIOPS: "76800"
 ```
 
