@@ -18,12 +18,13 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+
 	"github.com/hpe-storage/common-host-libs/docker/dockervol"
 	"github.com/hpe-storage/common-host-libs/jconfig"
 	log "github.com/hpe-storage/common-host-libs/logger"
 	flexvol "github.com/hpe-storage/flexvolume-driver/pkg/flexvol"
-	"os"
-	"path/filepath"
 )
 
 const (
@@ -46,9 +47,8 @@ var (
 	// Commit contains the commit id added by the build process
 	Commit = "unknown"
 
-	dockerVolumePluginSocketPath = "/etc/hpe-storage/nimble.sock"
-	stripK8sFromOptions          = true
-	logFilePath                  = "/var/log/hpe-flexVolume-driver.log"
+	stripK8sFromOptions = true
+
 	logLevel                     = "info"
 	createVolumes                = false
 	enable16                     = false
