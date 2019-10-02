@@ -1,4 +1,4 @@
-// (c) Copyright 2017 Hewlett Packard Enterprise Development LP
+// (c) Copyright 2019 Hewlett Packard Enterprise Development LP
 
 package util
 
@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
-	matchAllCap   = regexp.MustCompile("([a-z0-9])([A-Z])")
+	matchFirstCap  = regexp.MustCompile("(.)([A-Z][a-z]+)")
+	matchAllCap    = regexp.MustCompile("([a-z0-9])([A-Z])")
+	matchSnakeCase = regexp.MustCompile("(^[A-Za-z])|_([A-Za-z])")
 )
 
 // ToSnakeCase converts the given camelCase string into snake_case
@@ -19,23 +20,13 @@ func ToSnakeCase(str string) string {
 	return strings.ToLower(snake)
 }
 
-// IsSensitive checks if the given key exists in the list of bad words (sensitive info)
-func IsSensitive(key string) bool {
-	// TODO: Add more sensitive words (lower-case) to this list
-	badWords := []string{
-		"x-auth-token",
-		"username",
-		"user",
-		"password",
-		"passwd",
-		"secret",
-		"token",
+// ToCamelCase converts the given snake_case string to camelCase
+func ToCamelCase(str string) string {
+	camelCase := matchSnakeCase.ReplaceAllStringFunc(str, func(s string) string {
+		return strings.ToUpper(strings.Replace(s, "_", "", -1))
+	})
+	if camelCase == "" {
+		return ""
 	}
-	for _, bad := range badWords {
-		// Perform case-insensitive and substring match
-		if strings.Contains(bad, strings.ToLower(key)) {
-			return true
-		}
-	}
-	return false
+	return strings.ToLower(camelCase[:1]) + camelCase[1:]
 }
