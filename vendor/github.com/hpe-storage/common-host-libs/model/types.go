@@ -187,16 +187,19 @@ type Volume struct {
 	ConnectionMode string                 `json:"connection_mode,omitempty"`
 	LunID          string                 `json:"lun_id,omitempty"`
 	TargetScope    string                 `json:"target_scope,omitempty"` //GST="group", VST="volume" or empty(older array fiji etc), and no-op for FC
-	IscsiSessions  []*iscsiSession        `json:"iscsi_sessions,omitempty"`
-	FcSessions     []*fcSession           `json:"fc_sessions,omitempty"`
+	IscsiSessions  []*IscsiSession        `json:"iscsi_sessions,omitempty"`
+	FcSessions     []*FcSession           `json:"fc_sessions,omitempty"`
 }
 
-type fcSession struct {
+// FcSession info
+type FcSession struct {
 	InitiatorWwpn string `json:"initiatorWwpn,omitempty"`
 }
 
-type iscsiSession struct {
+// IscsiSession info
+type IscsiSession struct {
 	InitiatorName string `json:"initiatorName,omitempty"`
+	InitiatorIP   string `json:"initiatorIp,omitempty"`
 }
 
 // Snapshot is a snapshot of a volume
@@ -215,7 +218,7 @@ type Snapshot struct {
 
 // PublishOptions are the options needed to publish a volume
 type PublishOptions struct {
-	HostID         string `json:"host_id,omitempty"`
+	HostUUID       string `json:"host_uuid,omitempty"`
 	AccessProtocol string `json:"access_protocol,omitempty"`
 }
 
