@@ -59,6 +59,8 @@ metadata:
 stringData:
   backend: cloudvolumes.hpe.com
   protocol: "iscsi"
+  serviceName: cv-cp-svc
+  servicePort: "8080"
 data:
   # echo -n "<my very confidential access key>" | base64
   username: YWRtaW4=
@@ -170,6 +172,7 @@ $ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments
 #### HPE Cloud Volumes
 
 ```
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpecv-cp.yaml
 $ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpecv-flexvolume-driver.yaml
 ```
 
