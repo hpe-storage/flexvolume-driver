@@ -23,7 +23,8 @@ import (
 	log "github.com/hpe-storage/common-host-libs/logger"
 	"github.com/hpe-storage/common-host-libs/windows"
 )
-
+// TO-DO - We should use CHAPI module instead of using PowerShell command
+// directly.
 func doMount(flexvolPath, dockerPath, dockerName, mountID string) error {
 	// Get volume object for a disk mounted by plugin.
 	err := windows.AddPartitionAccessPath(flexvolPath, dockerPath)

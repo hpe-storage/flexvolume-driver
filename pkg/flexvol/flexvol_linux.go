@@ -25,8 +25,6 @@ import (
 	"strings"
 )
 
-// TO-DO - We should use CHAPI module instead of using PowerShell command
-// directly.
 func doMount(flexvolPath, dockerPath, dockerName, mountID string) error {
 	devPath, err := linux.GetDeviceFromMountPoint(dockerPath)
 	if err != nil {

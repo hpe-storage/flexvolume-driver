@@ -396,9 +396,6 @@ func retryGetDockerPathAndMetadata(flexvolPath, devPath string) (string, string,
 			}
 			return dockerPath, metadata, err
 		}
-		if err != nil {
-			return dockerPath, metadata, err
-		}
 		return dockerPath, metadata, nil
 	}
 }
