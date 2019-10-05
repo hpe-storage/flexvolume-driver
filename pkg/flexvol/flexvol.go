@@ -243,7 +243,7 @@ func Mount(args []string) (string, error) {
 	}
 
 	mountID, err := getMountID(args[0])
-	if err != nil {
+	if err != nil && !(strings.Contains(err.Error(), "object was not found")) {
 		return "", err
 	}
 
@@ -256,19 +256,11 @@ func Mount(args []string) (string, error) {
 	err = os.MkdirAll(args[0], 0755)
 	if err != nil {
 		return "", err
+
 	}
+	log.Tracef("flexpath %s, mountpath %s", args[0], path)
 
 	err = doMount(args[0], path, dockerVolName, mountID)
-	if err != nil {
-		return "", err
-	}
-
-	// Set selinux context if configured
-	// References:
-	//    https://github.com/kubernetes/kubernetes/issues/20813
-	//    https://github.com/openshift/origin/issues/741
-	//    https://github.com/projectatomic/atomic-site/blob/master/source/blog/2015-06-15-using-volumes-with-docker-can-cause-problems-with-selinux.html.md
-	err = linux.Chcon("svirt_sandbox_file_t", path)
 	if err != nil {
 		return "", err
 	}
@@ -282,47 +274,14 @@ func Unmount(args []string) (string, error) {
 	log.Tracef("Unmount called with %v", args)
 	mountID, err := getMountID(args[0])
 	if err != nil {
+		log.Errorf("Failed to get the mount id from flexvolpath %s ", args[0])
 		return "", err
 	}
-
-	devPath, err := linux.GetDeviceFromMountPoint(args[0])
+	err = doUnMount(args[0], mountID)
 	if err != nil {
+		log.Errorf("Failed to unmount, flexvolpath %s ", args[0])
 		return "", err
 	}
-
-	log.Tracef("Umount of \"%s\" from %s", args[0], devPath)
-	err = linux.BindUnmount(args[0])
-	if err != nil && !strings.Contains(err.Error(), notMounted) {
-		return "", err
-	}
-
-	dockerPath, metadata, err := retryGetDockerPathAndMetadata(args[0], devPath)
-	if err != nil && !strings.Contains(strings.ToLower(err.Error()), noFileOrDirErr) {
-		return "", err
-	}
-
-	dockerVolumeName, err := retryGetVolumeNameFromMountPath(args[0], dockerPath)
-	if err != nil {
-		return "", err
-	}
-
-	log.Tracef("docker unmount of %s %s", dockerVolumeName, mountID)
-	err = dvp.Unmount(dockerVolumeName, mountID)
-	if err != nil && !strings.Contains(err.Error(), notMounted) {
-		return "", err
-	}
-
-	if metadata != "" {
-		dockerVolumeName, err = getVolumeNameFromMountPath(args[0], dockerPath)
-		if err != nil {
-			// an error means that we didn't find the volume mounted
-			// this means we can clean up the breadcrumbs
-			log.Tracef("Unmount: removing metadata=%s", metadata)
-			os.Remove(metadata)
-		}
-		log.Tracef("Unmount: dockerVolumeName=%s still has an active mount at %s.", dockerVolumeName, dockerPath)
-	}
-
 	return BuildJSONResponse(&Response{Status: SuccessStatus}), nil
 }
 
@@ -348,10 +307,15 @@ func retryGetVolumeNameFromMountPath(k8sPath, dockerPath string) (string, error)
 
 func getMountID(path string) (string, error) {
 	log.Tracef("getMountID called with %v\n", path)
+	// Replace backward slash to forward slash.
+	backSlash := "\\\\"
+	cregx := regexp.MustCompile(backSlash)
+	mpath := cregx.ReplaceAllString(path, "/")
+
 	r := regexp.MustCompile(mountPathRegex)
-	groups := r.FindStringSubmatch(path)
+	groups := r.FindStringSubmatch(mpath)
 	if len(groups) < 2 {
-		return "", fmt.Errorf("unable to split %s", path)
+		return "", fmt.Errorf("unable to extract uuid from path %s", mpath)
 	}
 	log.Tracef("getMountID returning \"%s\"", groups[1])
 	return groups[1], nil
@@ -467,60 +431,6 @@ func getDockerPathAndMetadata(flexvolPath, devPath string) (string, string, erro
 	}
 	log.Tracef("getDockerPathAndMetadata: devPath=%s was mounted on dockerPath=%s", devPath, dockerPath)
 	return dockerPath, metadata, nil
-}
-
-func doMount(flexvolPath, dockerPath, dockerName, mountID string) error {
-	devPath, err := linux.GetDeviceFromMountPoint(dockerPath)
-	if err != nil {
-		return err
-	}
-
-	if devPath == "" {
-		//we're probably running in a different namespace
-		//so we need to pull the device path from the
-		//docker volume driver
-		log.Infof("doMount: devPath was empty for flexvolPath=% volume=%s", flexvolPath, dockerName)
-
-		//get the volume info
-		var volRes *dockervol.GetResponse
-		volRes, err = getVolume(dockerName)
-		if err != nil {
-			return err
-		}
-
-		devPath, found := volRes.Volume.Status[devicePathKey].(string)
-		if !found || devPath == "" {
-			log.Errorf("Unable to get device for flexvolPath=%s from docker volume=%+v (path=%s)", flexvolPath, volRes, dockerPath)
-			return fmt.Errorf("Unable to get device for flexvolPath=%s from docker volume=%s", flexvolPath, dockerPath)
-		}
-		log.Tracef("doMount: found devPath=%s for volume=%s", devPath, dockerName)
-
-		//mount devicePath onto flexvolPath
-		_, err = linux.MountDeviceWithFileSystem(devPath, flexvolPath, nil)
-		if err != nil {
-			return err
-		}
-		log.Tracef("doMount: mounted devPath=%s at flexvolPath=%s", devPath, flexvolPath)
-
-		//create a hidden file in the flexvolume path that maps flexvolume mount to the docker volume (breadcrumb)
-		var metadata string
-		metadata, err = getMountMetadataPath(flexvolPath)
-		if err != nil {
-			return err
-		}
-		err = ioutil.WriteFile(metadata, []byte(dockerPath), 0600)
-		if err != nil {
-			return err
-		}
-		log.Tracef("doMount: stored dockerPath=%s at metadata=%s", dockerPath, metadata)
-
-	} else {
-		//bind mount the docker path to the flexvol path
-		err = linux.RetryBindMount(dockerPath, flexvolPath, false)
-		log.Tracef("doMount: bind mounted dockerPath=%s at flexvolPath=%s", dockerPath, flexvolPath)
-	}
-
-	return err
 }
 
 func getMountMetadataPath(flexvolPath string) (string, error) {
