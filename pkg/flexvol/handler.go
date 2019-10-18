@@ -23,15 +23,6 @@ import (
 
 // Handle the conversion of flexvol commands and args to docker volume
 func Handle(driverCommand string, enable16 bool, args []string) string {
-	if driverCommand == InitCommand {
-		log.Trace("enable1.6=", enable16)
-		if enable16 {
-			return BuildJSONResponse(&Response{Status: SuccessStatus})
-		}
-		capabilities := map[string]bool{"attach": false}
-		return BuildJSONResponse(&Response{Status: SuccessStatus, DriverCapabilities: capabilities})
-	}
-
 	err := ensureArg(driverCommand, args, 1)
 	if err != nil {
 		return BuildJSONResponse(ErrorResponse(err))
