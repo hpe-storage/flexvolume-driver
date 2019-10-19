@@ -79,6 +79,22 @@ func main() {
 	log.Infof("[%d] entry  : Driver=%s Version=%s-%s Socket=%s Overridden=%t", pid, filepath.Base(os.Args[0]), Version, Commit, dockerVolumePluginSocketPath, overridden)
 
 	log.Infof("[%d] request: %s %v", pid, driverCommand, os.Args[2:])
+
+	if driverCommand == flexvol.InitCommand {
+		log.Trace("enable1.6=", enable16)
+		var resp string
+		if enable16 {
+			resp = flexvol.BuildJSONResponse(&flexvol.Response{Status: flexvol.SuccessStatus})
+			log.Infof("[%d] reply  : %s %v: %v", pid, driverCommand, os.Args[2:], resp)
+		} else {
+			capabilities := map[string]bool{"attach": false}
+			resp = flexvol.BuildJSONResponse(&flexvol.Response{Status: flexvol.SuccessStatus, DriverCapabilities: capabilities})
+			log.Infof("[%d] reply  : %s %v: %v", pid, driverCommand, os.Args[2:], resp)
+		}
+		fmt.Println(resp)
+		return
+	}
+
 	dockervolOptions := &dockervol.Options{
 		SocketPath:                   dockerVolumePluginSocketPath,
 		StripK8sFromOptions:          stripK8sFromOptions,
