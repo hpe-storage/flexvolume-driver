@@ -15,7 +15,7 @@ HPE Volume Driver for Kubernetes FlexVolume Plugin leverages HPE Nimble Storage 
 
 | Driver      | HPE Nimble Storage Version | Release Notes    |
 |-------------|----------------------------|------------------|
-| v3.0.0      | 5.1.3.x and above          | [v3.0.0](release-notes/v3.0.0.md)|
+| v3.0.0      | 5.0.8.x and 5.1.3.x onwards          | [v3.0.0](release-notes/v3.0.0.md)|
 
 **Note:** Synchronous replication (Peer Persistence) is not supported by the HPE Volume Driver for Kubernetes FlexVolume Plugin.
 
