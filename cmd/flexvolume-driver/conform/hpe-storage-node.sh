@@ -68,6 +68,6 @@ fi
 
 # apply workaround for Rancher RKE(kubelet in container) related to
 # https://github.com/kubernetes/kubernetes/issues/65825
-if [ "$FLAVOR" = "rancher" ] && [ ! -f /etc/multipath.conf ]; then
+if [ "$FLAVOR" = "rke" ] && [ ! -f /etc/multipath.conf ]; then
     mv /usr/local/bin/multipath.conf /etc/multipath.conf
 fi

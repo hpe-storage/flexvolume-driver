@@ -11,8 +11,8 @@ fi
 
 # Apply workaround for Rancher RKE(kubelet in container) related to
 # https://github.com/kubernetes/kubernetes/issues/65825
-if [ "${FLAVOR}" = "rancher" ]; then
-    sed -i -e 's/Environment=FLAVOR=k8s/Environment=FLAVOR=rancher/g' \
+if [ "${FLAVOR}" = "rke" ]; then
+    sed -i -e 's/Environment=FLAVOR=k8s/Environment=FLAVOR=rke/g' \
         /opt/hpe-storage/lib/hpe-storage-node.service
     cp -f "/opt/hpe-storage/nimbletune/multipath.conf.upstream" \
         /usr_local/local/bin/multipath.conf
