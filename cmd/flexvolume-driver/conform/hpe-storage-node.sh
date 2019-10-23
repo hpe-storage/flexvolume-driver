@@ -65,3 +65,9 @@ else
     echo "unsupported configuration for node package checks. os $os_name"
     exit 1
 fi
+
+# apply workaround for Rancher RKE(kubelet in container) related to
+# https://github.com/kubernetes/kubernetes/issues/65825
+if [ "$FLAVOR" = "rke" ] && [ ! -f /etc/multipath.conf ]; then
+    mv /usr/local/bin/multipath.conf /etc/multipath.conf
+fi
