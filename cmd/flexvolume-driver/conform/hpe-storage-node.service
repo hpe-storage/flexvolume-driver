@@ -8,6 +8,7 @@ After=network.target network-online.target
 [Service]
 # protocol is modified by plugin based on user setting for fc
 Environment=PROTOCOL=iscsi
+Environment=FLAVOR=k8s
 # fork the process so systemd waits until package installation is complete, before starting plugin
 Type=forking
 RemainAfterExit=true

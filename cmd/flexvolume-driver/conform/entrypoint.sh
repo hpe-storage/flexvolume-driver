@@ -9,6 +9,15 @@ if [ "${PROTOCOL}" = "fc" ]; then
     /opt/hpe-storage/lib/hpe-storage-node.service
 fi
 
+# Apply workaround for Rancher RKE(kubelet in container) related to
+# https://github.com/kubernetes/kubernetes/issues/65825
+if [ "${FLAVOR}" = "rancher" ]; then
+    sed -i -e 's/Environment=FLAVOR=k8s/Environment=FLAVOR=rancher/g' \
+        /opt/hpe-storage/lib/hpe-storage-node.service
+    cp -f "/opt/hpe-storage/nimbletune/multipath.conf.upstream" \
+        /usr_local/local/bin/multipath.conf
+fi
+
 # Copy HPE Storage Node Conformance checks and conf in place
 cp -f "/opt/hpe-storage/lib/hpe-storage-node.service" \
       /lib/systemd/system/hpe-storage-node.service
