@@ -20,7 +20,10 @@ HPE Volume Driver for Kubernetes FlexVolume Plugin leverages HPE Nimble Storage 
 **Note:** Synchronous replication (Peer Persistence) is not supported by the HPE Volume Driver for Kubernetes FlexVolume Plugin.
 
 ### HPE Cloud Volumes
-No specific requirements at this time.
+
+* Amazon EKS 1.12/1.13
+* Microsoft Azure AKS 1.12/1.13
+* US regions only
 
 ## Deploying to Kubernetes
 The recommend way to deploy and manage the HPE Volume Driver for Kubernetes FlexVolume Plugin is to use Helm. Please see the [co-deployments](https://github.com/hpe-storage/co-deployments) repository for further information.
@@ -100,7 +103,6 @@ data:
     {
       "global":   {},
       "defaults": {
-                 "sizeInGiB":"10",
                  "limitIOPS":"-1",
                  "limitMBPS":"-1",
                  "perfPolicy": "Other"
@@ -124,17 +126,15 @@ data:
   volume-driver.json: |-
     {
       "global": {
-                "nameSuffix": ".docker",
                 "snapPrefix": "BaseFor",
-                "initiators": ["10.128.0.14", "10.1.0.8", "10.1.0.7"],
+                "initiators": ["eth0"],
                 "automatedConnection": true,
                 "existingCloudSubnet": "10.1.0.0/24",
                 "region": "us-east-1",
                 "privateCloud": "vpc-data",
-                "cloudComputeProvider": "Google Cloud Platform"
+                "cloudComputeProvider": "Amazon AWS"
       },
       "defaults": {
-                "sizeInGiB": 10,
                 "limitIOPS": 1000,
                 "fsOwner": "0:0",
                 "fsMode": "600",
@@ -143,8 +143,7 @@ data:
                 "protectionTemplate": "twicedaily:4",
                 "encryption": true,
                 "volumeType": "PF",
-                "destroyOnRm": true,
-                "mountConflictDelay": 120
+                "destroyOnRm": true
       },
       "overrides": {
       }
@@ -172,8 +171,16 @@ $ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments
 #### HPE Cloud Volumes
 
 ```
-$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpecv-cp.yaml
-$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpecv-flexvolume-driver.yaml
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-cp.yaml
+
+Amazon EKS:
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-aws-flexvolume-driver.yaml
+
+Microsoft Azure AKS:
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-azure-flexvolume-driver.yaml
+
+Generic:
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-flexvolume-driver.yaml
 ```
 
 **Note:** The declarations for HPE Volume Driver for Kubernetes FlexVolume Plugin can be found [here](https://github.com/hpe-storage/co-deployments/tree/master/yaml/flexvolume-driver)
