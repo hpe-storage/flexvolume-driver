@@ -162,26 +162,30 @@ Please see [ADVANCED.md](ADVANCED.md) for more `volume-driver.json` configuratio
 Deploy the driver as a `DaemonSet` and the dynamic provisioner as a `Deployment`.
 
 #### HPE Nimble Storage
-
+##### 3.0.0
 ```
-$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-flexvolume-driver-v3.0.0.yaml
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-nimble-storage/hpe-flexvolume-driver-v3.0.0.yaml
+```
+##### 3.1.0
+```
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-nimble-storage/hpe-flexvolume-driver-v3.1.0.yaml
 ```
 
 #### HPE Cloud Volumes
 ##### Container-Provider Service
 ```
-$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-cp.yaml
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-cp-v3.1.0.yaml
 ```
 ##### FlexVolume Driver
 ```
 Amazon EKS:
-$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-aws-flexvolume-driver.yaml
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-aws-flexvolume-driver-v3.1.0.yaml
 
 Microsoft Azure AKS:
-$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-azure-flexvolume-driver.yaml
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-azure-flexvolume-driver-v3.1.0.yaml
 
 Generic:
-$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-flexvolume-driver.yaml
+$ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-flexvolume-driver-v3.1.0.yaml
 ```
 
 **Note:** The declarations for HPE Volume Driver for Kubernetes FlexVolume Plugin can be found [here](https://github.com/hpe-storage/co-deployments/tree/master/yaml/flexvolume-driver)
