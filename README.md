@@ -168,10 +168,12 @@ $ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments
 ```
 
 #### HPE Cloud Volumes
-
+##### Container-Provider Service
 ```
 $ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-cp.yaml
-
+```
+##### FlexVolume Driver
+```
 Amazon EKS:
 $ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments/master/yaml/flexvolume-driver/hpe-cloud-volumes/hpecv-aws-flexvolume-driver.yaml
 
