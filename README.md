@@ -2,24 +2,23 @@
 
 HPE Volume Driver for Kubernetes FlexVolume Plugin leverages HPE Nimble Storage or HPE Cloud Volumes to provide scalable and persistent storage for stateful applications.
 
-## Host Platform Requirements
+## HPE Nimble Storage Platform Requirements
+| Driver      | HPE Nimble Storage Version | Release Notes    |
+|-------------|----------------------------|------------------|
+| v3.0.0      | 5.0.8.x and 5.1.3.x onwards          | [v3.0.0](release-notes/v3.0.0.md)|
+| v3.1.0      | 5.0.8.x and 5.1.3.x onwards          | [v3.1.0](release-notes/v3.1.0.md)|
 
 * OpenShift Container Platform 3.9, 3.10 and 3.11.
 * Kubernetes 1.10 and above.
 * Redhat/CentOS 7.5+
 * Ubuntu 16.04/18.04 LTS
 
-## Storage Platform Requirements
-
-### HPE Nimble Storage
-
-| Driver      | HPE Nimble Storage Version | Release Notes    |
-|-------------|----------------------------|------------------|
-| v3.0.0      | 5.0.8.x and 5.1.3.x onwards          | [v3.0.0](release-notes/v3.0.0.md)|
-
 **Note:** Synchronous replication (Peer Persistence) is not supported by the HPE Volume Driver for Kubernetes FlexVolume Plugin.
 
-### HPE Cloud Volumes
+## HPE Cloud Volumes Platform Requirements
+| Driver      | HPE Nimble Storage Version | Release Notes    |
+|-------------|----------------------------|------------------|
+| v3.1.0      | 5.0.8.x and 5.1.3.x onwards          | [v3.1.0](release-notes/v3.1.0.md)|
 
 * Amazon EKS 1.12/1.13
 * Microsoft Azure AKS 1.12/1.13
@@ -185,7 +184,7 @@ $ kubectl create -f https://raw.githubusercontent.com/hpe-storage/co-deployments
 
 **Note:** The declarations for HPE Volume Driver for Kubernetes FlexVolume Plugin can be found [here](https://github.com/hpe-storage/co-deployments/tree/master/yaml/flexvolume-driver)
 
-Check to see all `hpe-flexvolume-driver` `Pods` (one per compute node) and the `hpe-dynamic-provisioner` Pod are running:
+Check to see all `hpe-flexvolume-driver` `Pods` (one per compute node) and the `hpe-dynamic-provisioner` Pod are running.
 ```
 $ kubectl get pods -n kube-system
 NAME                                            READY   STATUS    RESTARTS   AGE
@@ -193,6 +192,14 @@ hpe-flexvolume-driver-2rdt4                     1/1     Running   0          45s
 hpe-flexvolume-driver-md562                     1/1     Running   0          44s
 hpe-flexvolume-driver-x4k96                     1/1     Running   0          44s
 hpe-dynamic-provisioner-59f9d495d4-hxh29        1/1     Running   0          24s
+```
+
+For HPE Cloud Volumes, check that `hpe-cv-cp` pod is running as well.
+```
+$ kubectl get pods -n kube-system -l=app=cv-cp
+NAME                                READY   STATUS    RESTARTS   AGE
+hpe-cv-cp-2rdt4                     1/1     Running   0          45s
+
 ```
 
 ## Using

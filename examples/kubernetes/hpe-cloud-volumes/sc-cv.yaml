@@ -5,5 +5,5 @@ metadata:
 provisioner: hpe.com/cv
 parameters:
   description: "Volume created by the HPE Volume Driver for Kubernetes FlexVolume Plugin"
-  perfPolicy: "SQL Server"
+  perfPolicy: "Other"
   limitIOPS: "1000"
