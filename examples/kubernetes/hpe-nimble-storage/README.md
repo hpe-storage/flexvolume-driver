@@ -44,7 +44,6 @@ Cloning supports two modes of cloning. Either use `cloneOf` and reference a PVC 
 | snapshot | Text | The name of the snapshot to base the clone on. This is optional. If not specified, a new snapshot is created. |
 | createSnapshot | Boolean | Indicates that a new snapshot of the volume should be taken matching the name provided in the `snapshot` parameter. If the `snapshot` parameter is not specified, a default name will be created. |
 | snapshotPrefix | Text | A prefix to add to the beginning of the snapshot name. |
-| destroyOnDetach | Boolean | Indicates that the Nimble volume (including snapshots) backing this volume should be destroyed when this volume is unmounted or detached. |
 
 ## Import parameters
 Importing volumes to Kubernetes requires the source Nimble volume to be offline. All previous Access Control Records and Initiator Groups will be stripped from the volume when put under control of the HPE Volume Driver for Kubernetes FlexVolume Plugin.
