@@ -16,9 +16,9 @@ HPE Volume Driver for Kubernetes FlexVolume Plugin leverages HPE Nimble Storage 
 **Note:** Synchronous replication (Peer Persistence) is not supported by the HPE Volume Driver for Kubernetes FlexVolume Plugin.
 
 ## HPE Cloud Volumes Platform Requirements
-| Driver      | HPE Nimble Storage Version | Release Notes    |
-|-------------|----------------------------|------------------|
-| v3.1.0      | 5.0.8.x and 5.1.3.x onwards          | [v3.1.0](release-notes/v3.1.0.md)|
+| Driver      | Release Notes    |
+|-------------|------------------|
+| v3.1.0      | [v3.1.0](release-notes/v3.1.0.md)|
 
 * Amazon EKS 1.12/1.13
 * Microsoft Azure AKS 1.12/1.13
