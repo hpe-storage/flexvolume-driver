@@ -18,6 +18,12 @@ else
 	endif
 endif
 
+# refers to dockerhub if registry is not specified
+IMAGE = $(REPO_NAME):$(VERSION)
+ifdef CONTAINER_REGISTRY
+	IMAGE = $(CONTAINER_REGISTRY)/$(REPO_NAME):$(VERSION)
+endif
+
 # golangci-lint allows us to have a single target that runs multiple linters in
 # the same fashion.  This variable controls which linters are used.
 LINTER_FLAGS = --disable-all --enable=vet --enable=vetshadow --enable=golint --enable=ineffassign --enable=goconst --enable=deadcode --enable=dupl --enable=varcheck --enable=gocyclo --enable=misspell
@@ -30,14 +36,13 @@ endif
 
 GOENV = PATH=$$PATH:$(GOPATH)/bin
 
-build: check-env clean compile image push
+build: clean compile image push
 
-all: check-env clean tools lint compile image push
+all: clean lint compile image push
 
 .PHONY: help
 help:
 	@echo "Targets:"
-	@echo "    tools    - Download and install go tooling required to build."
 	@echo "    vendor   - Download dependencies (go mod vendor)"
 	@echo "    lint     - Static analysis of source code.  Note that this must pass in order to build."
 	@echo "    clean    - Remove build artifacts."
@@ -47,23 +52,13 @@ help:
 	@echo "    push     - Push flexvolume driver image to registry."
 	@echo "    all      - Clean, lint, build, test, and push image."
 
-.PHONY: check-env
-check-env:
-ifndef CONTAINER_REGISTRY
-	$(error CONTAINER_REGISTRY is undefined)
-endif
-
-.PHONY: tools
-tools:
-	@echo "Get golangci-lint"
-	@go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
-
 vendor:
 	@go mod vendor
 
 .PHONY: lint
 lint:
 	@echo "Running lint"
+	@go version
 	export $(GOENV) && golangci-lint run $(LINTER_FLAGS) --exclude vendor
 
 .PHONY: clean
@@ -71,7 +66,7 @@ clean:
 	@echo "Removing build artifacts"
 	@rm -rf build
 	@echo "Removing the image"
-	-docker image rm $(CONTAINER_REGISTRY)/$(REPO_NAME):$(VERSION) > /dev/null 2>&1
+	-docker image rm $(IMAGE) > /dev/null 2>&1
 
 .PHONY: compile
 compile:
@@ -105,9 +100,9 @@ image:
 	cp -r ../cmd/flexvolume-driver/conform/ conform/ && \
 	cp -r ../cmd/flexvolume-driver/diag/ diag/ && \
 	rsync -r --no-perms --no-owner --no-group $(TUNE_LINUX_CONFIG_PATH)/config/ tune/ && \
-	docker build -t $(CONTAINER_REGISTRY)/$(REPO_NAME):$(VERSION) .
+	docker build -t $(IMAGE) .
 
 .PHONY: push
 push:
 	@echo "Publishing $(NAME):$(VERSION)"
-	@docker push $(CONTAINER_REGISTRY)/$(REPO_NAME):$(VERSION)
+	@docker push $(IMAGE)

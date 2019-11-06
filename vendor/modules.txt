@@ -1,10 +1,11 @@
 # github.com/gorilla/mux v1.7.2
 github.com/gorilla/mux
-# github.com/hpe-storage/common-host-libs v0.0.0-20191001172847-50bb6437609e
+# github.com/hpe-storage/common-host-libs v0.0.0-20191104161238-221358077c14
 github.com/hpe-storage/common-host-libs/docker/dockervol
 github.com/hpe-storage/common-host-libs/jconfig
 github.com/hpe-storage/common-host-libs/logger
 github.com/hpe-storage/common-host-libs/linux
+github.com/hpe-storage/common-host-libs/windows
 github.com/hpe-storage/common-host-libs/connectivity
 github.com/hpe-storage/common-host-libs/docker/dockerlt
 github.com/hpe-storage/common-host-libs/model
@@ -19,8 +20,17 @@ github.com/konsorten/go-windows-terminal-sequences
 github.com/mitchellh/mapstructure
 # github.com/sirupsen/logrus v1.4.2
 github.com/sirupsen/logrus
+# github.com/sparrc/go-ping v0.0.0-20190613174326-4e5b6552494c
+github.com/sparrc/go-ping
 # golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
 golang.org/x/crypto/ssh/terminal
+# golang.org/x/net v0.0.0-20190813141303-74dc4d7220e7
+golang.org/x/net/icmp
+golang.org/x/net/ipv4
+golang.org/x/net/ipv6
+golang.org/x/net/internal/iana
+golang.org/x/net/internal/socket
+golang.org/x/net/bpf
 # golang.org/x/sys v0.0.0-20190813064441-fde4db37ae7a
 golang.org/x/sys/unix
 golang.org/x/sys/windows

@@ -1,5 +1,7 @@
 module github.com/hpe-storage/flexvolume-driver
 
+go 1.12
+
 require (
 	cloud.google.com/go v0.44.3 // indirect
 	github.com/OpenPeeDeeP/depguard v1.0.0 // indirect
@@ -27,8 +29,8 @@ require (
 	github.com/gostaticanalysis/analysisutil v0.0.3 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.9.5 // indirect
 	github.com/hashicorp/golang-lru v0.5.3 // indirect
-	github.com/hpe-storage/common-host-libs v0.0.0-20191001172847-50bb6437609e
-	github.com/hpe-storage/common-host-utils v0.0.0-20190812223006-61689ac3ec84 // indirect
+	github.com/hpe-storage/common-host-libs v0.0.0-20191104161238-221358077c14
+	github.com/hpe-storage/common-host-utils v3.0.1-0.20191029230007-ce7b10c83d3a+incompatible // indirect
 	github.com/kisielk/errcheck v1.2.0 // indirect
 	github.com/klauspost/compress v1.7.5 // indirect
 	github.com/klauspost/cpuid v1.2.1 // indirect
@@ -54,6 +56,7 @@ require (
 	github.com/shirou/gopsutil v2.18.12+incompatible // indirect
 	github.com/shurcooL/go v0.0.0-20190704215121-7189cc372560 // indirect
 	github.com/sirupsen/logrus v1.4.2 // indirect
+	github.com/sparrc/go-ping v0.0.0-20190613174326-4e5b6552494c // indirect
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.5 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
