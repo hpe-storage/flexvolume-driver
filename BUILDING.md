@@ -11,6 +11,9 @@ Turn on go modules support:
 export GO111MODULES=on
 export GOOS=linux
 ```
+
+Install [golangci-lint](https://github.com/golangci/golangci-lint#install)
+
 **Note:** Setting `GOOS` is optional as the binary runs on any platform, but tests are only supported on Linux.
 
 Set `CONTAINER_REGISTRY` environment variable to point to your image registry, if other than docker.io (default).
