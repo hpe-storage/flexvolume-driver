@@ -10,8 +10,8 @@ These parameters are mutable betweeen a parent volume and creating a clone from 
 
 | Parameter | String | Description |
 | --------- | ------ | ----------- |
-| nameSuffix| Text   | Suffix to append to Nimble volumes. |
-| destroyOnRm | Boolean | Indicates the backing Nimble volume (including snapshots) should be destroyed when the PVC is deleted. |
+| nameSuffix| Text   | Suffix to append to Cloud Volumes. |
+| destroyOnRm | Boolean | Indicates the backing Cloud volume (including snapshots) should be destroyed when the PVC is deleted. |
 | limitIOPS | Integer | The IOPS limit of the volume. The IOPS limit should be in the range 300 to 50000. |
 | perfPolicy | Text | The name of the performance policy to assign to the volume. Default example performance policies include "Other, Exchange, Oracle, SharePoint, SQL, Windows File Server". |
 | protectionTemplate | Text | The name of the protection template to assign to the volume. Default examples of protection templates include "daily:3, daily:7, daily:14, hourly:6, hourly:12, hourly:24, twicedaily:4, twicedaily:8, twicedaily:14, weekly:2, weekly:4, weekly:8, monthly:3, monthly:6, monthly:12 or none". |
@@ -39,7 +39,7 @@ Cloning supports two modes of cloning. Either use `cloneOf` and reference a PVC 
 | replStore | Text | Replication store name. Should be used with importVolAsClone parameter to clone a replica volume |
 
 ## Import parameters
-Importing volumes to Kubernetes requires the source Nimble volume to be offline. All previous Access Control Records and Initiator Groups will be stripped from the volume when put under control of the HPE Volume Driver for Kubernetes FlexVolume Plugin.
+Importing volumes to Kubernetes requires the source Cloud volume to be not attached to any nodes. All previous Access Control Records will be stripped from the volume when put under control of the HPE Volume Driver for Kubernetes FlexVolume Plugin.
 
 | Parameter | String | Description |
 | --------- | ------ | ----------- |
