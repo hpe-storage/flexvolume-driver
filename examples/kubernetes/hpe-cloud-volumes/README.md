@@ -27,12 +27,12 @@ These parameters are immutable for clones once a volume has been created.
 | encryption | Boolean | Indicates that the volume should be encrypted. |
 
 ## Cloning parameters
-Cloning supports two modes of cloning. Either use `cloneOf` and reference a PVC in the current namespace or use `importVolAsClone` and reference a Nimble volume name to clone and import to Kubernetes.
+Cloning supports two modes of cloning. Either use `cloneOf` and reference a PVC in the current namespace or use `importVolAsClone` and reference a Cloud volume name to clone and import to Kubernetes.
 
 | Parameter | String | Description |
 | --------- | ------ | ----------- |
 | cloneOf | Text | The name of the PV to be cloned. `cloneOf` and `importVolAsClone` are mutually exclusive. |
-| importVolAsClone | Text | The name of the Nimble volume to clone and import. `importVolAsClone` and `cloneOf` are mutually exclusive. |
+| importVolAsClone | Text | The name of the Cloud Volume volume to clone and import. `importVolAsClone` and `cloneOf` are mutually exclusive. |
 | snapshot | Text | The name of the snapshot to base the clone on. This is optional. If not specified, a new snapshot is created. |
 | createSnapshot | Boolean | Indicates that a new snapshot of the volume should be taken matching the name provided in the `snapshot` parameter. If the `snapshot` parameter is not specified, a default name will be created. |
 | snapshotPrefix | Text | A prefix to add to the beginning of the snapshot name. |
