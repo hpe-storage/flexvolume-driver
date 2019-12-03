@@ -103,15 +103,16 @@ chmod 555 hpe-logcollector.sh
 Usage
 
 ```markdown
- ./hpe-logcollector.sh -h
+./hpe-logcollector.sh -h
 Diagnostic Script to collect HPE Storage logs using kubectl
 
 Usage:
-     hpe-logcollector.sh [-h|--help][-n|--node-name NODE_NAME][-a|--all]
+     hpe-logcollector.sh [-h|--help][--node-name NODE_NAME][-n|--namespace NAMESPACE][-a|--all]
 Where
 -h|--help                  Print the Usage text
--n|--node-name NODE_NAME   Kubernetes Node Name needed to collect the
+--node-name NODE_NAME      where NODE_NAME is kubernetes Node Name needed to collect the
                            hpe diagnostic logs of the Node
+-n|--namespace NAMESPACE   where NAMESPACE is namespace of the pod deployment. default is kube-system
 -a|--all                   collect diagnostic logs of all the nodes.If
                            nothing is specified logs would be collected
                            from all the nodes
