@@ -33,8 +33,8 @@ systemctl restart hpe-storage-node
 # Copy the hpe log collector script
 echo "copy hpe log collector script..."
 cp -f "/opt/hpe-storage/bin/hpe-logcollector.sh" \
-      /usr_local/local/bin/hpe-logcollector.sh
-chmod +x /usr_local/local/bin/hpe-logcollector.sh
+      /usr/local/bin/hpe-logcollector.sh
+chmod +x /usr/local/bin/hpe-logcollector.sh
 
 echo "starting flexvolume plugin..."
 # Serve! Serve!!!

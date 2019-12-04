@@ -86,51 +86,34 @@ Log files associated with the HPE Volume Driver for Kubernetes FlexVolume Plugin
   The logs are persisted at `/var/log/hpe-docker-plugin.log` and `/var/log/dory.log`
 
 * Dynamic Provisioner logs:
-  `kubectl logs -f  deployment.apps/hpe-dynamic-provisioner`
+  `kubectl logs -f  deployment.apps/hpe-dynamic-provisioner -n kube-system`
   The logs are persisted at `/var/log/hpe-dynamic-provisioner.log`
 
 ## Log Collector
-Log collector script `hpe-logcollector.sh` can be used to collect diagnostic logs from the hosts.
 
-Depending on the severity of the problem, the script may need to executed directly on the compute node itself. Normal usage would entail running the collector script using `kubectl` in one of the driver `Pods` from the `DaemonSet` or the dynamic provisioner `Deployment`.
+Log collector script `hpe-logcollector.sh` can be used to collect diagnostic logs using kubectl
 
-If the issue is related to mount, unmount, attach or detach:
-```
-kubectl get pods -n kube-system -l name=hpe-flexvolume-driver -o wide
-NAME                          READY   STATUS    RESTARTS   AGE     IP              NODE              
-hpe-flexvolume-driver-b4rdn   1/1     Running   0          2d22h   10.21.192.224   tme-lnx9-salsa-wrk
-hpe-flexvolume-driver-ch9cr   1/1     Running   0          2d22h   10.21.192.225   tme-lnx7-salsa-wrk
-hpe-flexvolume-driver-x282s   1/1     Running   0          2d22h   10.21.192.222   tme-lnx8-salsa-wrk
-```
-Pay attention the node name, the script should be executed on the node exhibiting the issue.
+Download the script as follows
 
-If the issue is related to provisioning or deleting Persistent Volumes:
-```
-kubectl get pods -n kube-system -l daemon=kube-storage-controller-daemon -o wide
-NAME                                             READY   STATUS    RESTARTS   AGE     IP              NODE              
-kube-storage-controller-doryd-7d87f75586-xpbl8   1/1     Running   0          2d22h   10.21.192.225   tme-lnx7-salsa-wrk
-```
-It's important the script is executed in a FlexVolume driver `Pod`, not the dynamic provisioner `Pod`. In the example above if there were issues with deleting volumes, the script should've been executed in the `Pod` `hpe-flexvolume-driver-ch9cr` which reside on the same node as the provisioner: "tme-lnx7-salsa-wrk".
-
-Now, copy & paste the `NAME` into this `kubectl` command to make sure connectivity to the `Pod`:
-```
-kubectl exec -nkube-system -it hpe-flexvolume-driver-b4rdn -- hpe-logcollector.sh -h
-Diagnostic LogCollector Script to collect HPE Storage logs
-
-Usage: hpe-logcollector.sh [CASE_NUMBER]
-       where CASE_NUMBER is an optional parameter <HPE Nimble Storage Support Case Number>
-       needed to upload the logs to the HPE Nimble Storage FTP Server
+```markdown
+curl -O https://raw.githubusercontent.com/hpe-storage/flexvolume-driver/master/hpe-logcollector.sh
+chmod 555 hpe-logcollector.sh
 ```
 
-Now execute, with "00000000" replaced with the actual "HPE Nimble Storage Support Case Number".
-```
-kubectl exec -nkube-system -it hpe-flexvolume-driver-b4rdn -- hpe-logcollector.sh 00000000
-======================================
-Collecting the Diagnostic Information
-======================================
-CaseNumber is 00000000
-Transfer to the ftp server
-FTP of /var/log/00000000-hpe-storage-logs-tme-lnx9-salsa-wrk-20190915_030454.tar.gz to upload completed
-Complete
-====================================
+Usage
+
+```markdown
+./hpe-logcollector.sh -h
+Diagnostic Script to collect HPE Storage logs using kubectl
+
+Usage:
+     hpe-logcollector.sh [-h|--help][--node-name NODE_NAME][-n|--namespace NAMESPACE][-a|--all]
+Where
+-h|--help                  Print the Usage text
+--node-name NODE_NAME      where NODE_NAME is kubernetes Node Name needed to collect the
+                           hpe diagnostic logs of the Node
+-n|--namespace NAMESPACE   where NAMESPACE is namespace of the pod deployment. default is kube-system
+-a|--all                   collect diagnostic logs of all the nodes.If
+                           nothing is specified logs would be collected
+                           from all the nodes
 ```
